@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "target": "esnext",
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strict": true,
+        "types": ["node"]
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*"
+    ]
+}

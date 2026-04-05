@@ -91,9 +91,14 @@ function main() {
 	const file = fs.readFileSync(DOCS_JSON_FILE_PATH, "utf-8");
 
 	const data = JSON.parse(file);
-	const itemClasses: ItemClass[] = data.find((entry: any) =>
-		entry.NativeClass.endsWith("FGItemDescriptor'"),
-	)?.Classes;
+	const itemClasses: ItemClass[] = [
+		...data.find((entry: any) =>
+			entry.NativeClass.endsWith("FGItemDescriptor'"),
+		)?.Classes,
+		...data.find((entry: any) =>
+			entry.NativeClass.endsWith("FGResourceDescriptor'"),
+		)?.Classes,
+	];
 	const recipeClasses: RecipeClass[] = data.find((entry: any) =>
 		entry.NativeClass.endsWith("FGRecipe'"),
 	)?.Classes;
@@ -129,17 +134,13 @@ function main() {
 			return [];
 		}
 		const producedIn = parseProducedIn(cls.mProducedIn);
-		console.log(producedIn)
-		const sloopable = producedIn.some((buildableId) =>
-			{
-				return buildables.some(
-					(b) => {
-						console.log(b);
-						return b.id === buildableId.buildableId && b.canChangeProductionBoost;
-					}
-				);
-			},
-		);
+		console.log(producedIn);
+		const sloopable = producedIn.some((buildableId) => {
+			return buildables.some((b) => {
+				console.log(b);
+				return b.id === buildableId.buildableId && b.canChangeProductionBoost;
+			});
+		});
 
 		const recipe: Recipe = {
 			id: cls.ClassName,
@@ -152,6 +153,115 @@ function main() {
 		return [recipe];
 	});
 
+	// Need to manually add raw resource producing recipes.
+	// This is a slight fudge as it depends on the miner rank and the resource purity.
+	recipes.push(
+		{
+			id: "MineOreIron",
+			displayName: "Mine Ore Iron",
+			ingredients: [],
+			products: [{ itemId: "Desc_OreIron_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineCoal",
+			displayName: "Mine Coal",
+			ingredients: [],
+			products: [{ itemId: "Desc_Coal_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineOreCopper",
+			displayName: "Mine Copper Ore",
+			ingredients: [],
+			products: [{ itemId: "Desc_OreCopper_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineStone",
+			displayName: "Mine Limestone",
+			ingredients: [],
+			products: [{ itemId: "Desc_Stone_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineRawQuartz",
+			displayName: "Mine Raw Quartz",
+			ingredients: [],
+			products: [{ itemId: "Desc_RawQuartz_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "ExtractLiquidOil",
+			displayName: "Extract Crude Oil",
+			ingredients: [],
+			products: [{ itemId: "Desc_LiquidOil_C", amount: 1000 }],
+			duration: 0.2,
+			sloopable: false,
+		},
+		{
+			id: "ExtractWater",
+			displayName: "Extract Water",
+			ingredients: [],
+			products: [{ itemId: "Desc_Water_C", amount: 1000 }],
+			duration: 0.2,
+			sloopable: false,
+		},
+		{
+			id: "MineSAM",
+			displayName: "Mine SAM",
+			ingredients: [],
+			products: [{ itemId: "Desc_SAM_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "ExtractNitrogenGas",
+			displayName: "Extract Nitrogen Gas",
+			ingredients: [],
+			products: [{ itemId: "Desc_NitrogenGas_C", amount: 1000 }],
+			duration: 0.2,
+			sloopable: false,
+		},
+		{
+			id: "MineOreBauxite",
+			displayName: "Mine Bauxite Ore",
+			ingredients: [],
+			products: [{ itemId: "Desc_OreBauxite_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineOreGold",
+			displayName: "Mine Gold Ore",
+			ingredients: [],
+			products: [{ itemId: "Desc_OreGold_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineSulfur",
+			displayName: "Mine Sulfur",
+			ingredients: [],
+			products: [{ itemId: "Desc_Sulfur_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+		{
+			id: "MineOreUranium",
+			displayName: "Mine Uranium Ore",
+			ingredients: [],
+			products: [{ itemId: "Desc_OreUranium_C", amount: 1 }],
+			duration: 0.1,
+			sloopable: false,
+		},
+	);
+
 	fs.mkdirSync("output", { recursive: true });
 	fs.writeFileSync(
 		"output/items.json",
@@ -163,7 +273,7 @@ function main() {
 		JSON.stringify(recipes, null, 2),
 		"utf-8",
 	);
-		fs.writeFileSync(
+	fs.writeFileSync(
 		"output/buildables.json",
 		JSON.stringify(buildables, null, 2),
 		"utf-8",
