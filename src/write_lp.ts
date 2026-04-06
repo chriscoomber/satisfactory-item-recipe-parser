@@ -92,7 +92,7 @@ function generateLPProblemMpsFileStringMinimizeBeltLoad(
 			});
 			recipe.products.forEach((prod) => {
 				const item = items.find((i) => i.id === prod.itemId)!;
-				var amount = Math.ceil(prod.amount * recipeCost);
+				var amount = Math.ceil(prod.amount);
 				// Fudge - fluids take up one belt space (when packaged) per 1000 units
 				amount = item.form === "solid" ? amount : Math.ceil(amount / 1000);
 				conditions[item.shortId] =

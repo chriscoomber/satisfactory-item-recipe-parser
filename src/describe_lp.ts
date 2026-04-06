@@ -70,7 +70,7 @@ ${itemsWithActivity
 ${recipesWithActivity
 	.map(
 		({ recipe, activity }) =>
-			`- "${recipe.displayName}": ${activity.toFixed(5)} buildings (produces ${recipe.products.map((prod) => `${(prod.amount * activity).toFixed(5)} ${items.find((i) => i.id === prod.itemId)!.displayName}`).join(", ")} /min)`,
+			`- "${recipe.displayName}": ${activity.toFixed(5)} buildings (produces ${recipe.products.map((prod) => `${(prod.amount * activity * 60 / recipe.duration).toFixed(5)} ${items.find((i) => i.id === prod.itemId)!.displayName}`).join(", ")} /min)`,
 	)
 
 	.join("\n")}`;
