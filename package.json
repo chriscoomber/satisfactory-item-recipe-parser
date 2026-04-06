@@ -8,11 +8,14 @@
 	"main": "index.js",
 	"scripts": {
 		"parse": "tsx index.ts",
-		"format": "biome format --write"
+		"format": "biome format --write",
+		"lp-min": "cross-env PATH='./glpk-4.65/w64' glpsol.exe --mps output/satisfactory_min.mps --min -o output/satisfactory.sol",
+		"lp-max": "cross-env PATH='./glpk-4.65/w64' glpsol.exe --mps output/satisfactory_max.mps --max -o output/satisfactory.sol"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.10",
 		"@types/node": "^25.5.2",
+		"cross-env": "^10.1.0",
 		"tsx": "^4.21.0",
 		"typescript": "^6.0.2"
 	}
