@@ -62,7 +62,7 @@ export function describeLPSolution(recipes: Recipe[], items: Item[]): string {
 ${itemsWithActivity
 	.map(
 		({ item, activity }) =>
-			`- ${item.displayName}: ${activity.toFixed(2)} units/sec`,
+			`- "${item.displayName}": ${activity.toFixed(5)} /min`,
 	)
 	.join("\n")}
 
@@ -70,7 +70,7 @@ ${itemsWithActivity
 ${recipesWithActivity
 	.map(
 		({ recipe, activity }) =>
-			`- ${recipe.displayName}: ${activity.toFixed(2)} buildings`,
+			`- "${recipe.displayName}": ${activity.toFixed(5)} buildings (produces ${recipe.products.map((prod) => `${(prod.amount * activity).toFixed(5)} ${items.find((i) => i.id === prod.itemId)!.displayName}`).join(", ")} /min)`,
 	)
 
 	.join("\n")}`;

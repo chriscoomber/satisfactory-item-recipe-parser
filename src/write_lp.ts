@@ -33,10 +33,12 @@ function formatMpsFileString(
 			|    ${c.name}${" ".repeat(10 - c.name.length)}${c.condition[0].name}${" ".repeat(16 - c.condition[0].name.length)}${c.condition[0].amount}
 			|${c.condition
 				.slice(1)
-				.map(
-					(cond) =>
-						`              ${cond.name}${" ".repeat(16 - cond.name.length)}${cond.amount}`,
-				)
+				.map((cond) => {
+					const amountIntegral = cond.amount.toString().includes(".")
+						? cond.amount.toString().split(".")[0]
+						: cond.amount.toString();
+					return `              ${cond.name}${" ".repeat(17 - cond.name.length - amountIntegral.length)}${cond.amount.toFixed(4)}`;
+				})
 				.join("\n")}`),
 			)
 			.join("\n")}
@@ -48,10 +50,12 @@ function formatMpsFileString(
 			|    ${c.name}${" ".repeat(10 - c.name.length)}${c.condition[0].name}${" ".repeat(16 - c.condition[0].name.length)}${c.condition[0].amount}
 			|${c.condition
 				.slice(1)
-				.map(
-					(cond) =>
-						`              ${cond.name}${" ".repeat(16 - cond.name.length)}${cond.amount}`,
-				)
+				.map((cond) => {
+					const amountIntegral = cond.amount.toString().includes(".")
+						? cond.amount.toString().split(".")[0]
+						: cond.amount.toString();
+					return `              ${cond.name}${" ".repeat(17 - cond.name.length - amountIntegral.length)}${cond.amount.toFixed(4)}`;
+				})
 				.join("\n")}
 		`),
 			)
@@ -83,14 +87,16 @@ function generateLPProblemMpsFileStringMinimizeBeltLoad(
 				var amount = Math.ceil(ing.amount * recipeCost);
 				// Fudge - fluids take up one belt space (when packaged) per 1000 units
 				amount = item.form === "solid" ? amount : Math.ceil(amount / 1000);
-				conditions[item.shortId] = (conditions[item.shortId] ?? 0) - amount;
+				conditions[item.shortId] =
+					(conditions[item.shortId] ?? 0) - (amount * 60) / recipe.duration;
 			});
 			recipe.products.forEach((prod) => {
 				const item = items.find((i) => i.id === prod.itemId)!;
 				var amount = Math.ceil(prod.amount * recipeCost);
 				// Fudge - fluids take up one belt space (when packaged) per 1000 units
 				amount = item.form === "solid" ? amount : Math.ceil(amount / 1000);
-				conditions[item.shortId] = (conditions[item.shortId] ?? 0) + amount;
+				conditions[item.shortId] =
+					(conditions[item.shortId] ?? 0) + (amount * 60) / recipe.duration;
 			});
 			const beltPressure = Math.max(
 				0,
