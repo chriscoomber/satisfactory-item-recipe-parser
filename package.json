@@ -7,10 +7,11 @@
 	"type": "commonjs",
 	"main": "index.js",
 	"scripts": {
-		"parse": "tsx index.ts",
-		"format": "biome format --write",
-		"lp-min": "cross-env PATH='./glpk-4.65/w64' glpsol.exe --mps output/satisfactory_min.mps --min -o output/satisfactory.sol",
-		"lp-max": "cross-env PATH='./glpk-4.65/w64' glpsol.exe --mps output/satisfactory_max.mps --max -o output/satisfactory.sol"
+		"parse": "tsx index.ts --parse",
+		"write-lp": "tsx index.ts --write-lp",
+		"run-lp": "cross-env PATH='./glpk-4.65/w64' glpsol.exe --mps output/satisfactory.mps -o output/satisfactory.sol",
+		"describe-lp": "tsx index.ts --describe-lp",
+		"format": "biome format --write"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.10",
